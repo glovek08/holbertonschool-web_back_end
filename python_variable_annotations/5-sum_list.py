@@ -6,7 +6,7 @@ from typing import List
 from functools import reduce
 
 
-def sum_list(input_list: List[float]) -> float | int:
+def sum_list(input_list: List[float]) -> float:
     """
     Takes a list of floats and returns their sum.
 
