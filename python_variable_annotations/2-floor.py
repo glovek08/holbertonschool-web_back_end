@@ -18,6 +18,3 @@ def floor(n: float) -> int:
         int: n floored.
     """
     return floor_this(n)
-
-
-print(floor(12.52))
