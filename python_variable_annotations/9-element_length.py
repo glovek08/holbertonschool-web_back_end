@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 Dfines a function that takes a list and returns a list of tuples
 """
