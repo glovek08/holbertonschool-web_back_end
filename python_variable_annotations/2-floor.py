@@ -2,7 +2,8 @@
 from math import floor as floor_this
 
 """
-This module contains a type annotated function.
+This module contains a type annotated function,
+Aliased floor cause name conflic with function name.
 """
 
 
