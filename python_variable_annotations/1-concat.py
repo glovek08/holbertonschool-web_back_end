@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Contains a fn that takes a two strings and concats the second to the first 
+Contains a fn that takes a two strings and concats the second to the first
 but it's not really a concat because it return a new string.
 """
 
