@@ -2,18 +2,20 @@
 """
 Dfines a function that takes a list and returns a list of tuples
 """
-from typing import List, Tuple, Sized
+from typing import Iterable, Sequence, Tuple, List
 
 
-def element_length(lst: List[Sized]) -> List[Tuple[Sized, int]]:
+def element_length(lst: Iterable[Sequence]) -> List[Tuple[Sequence, int]]:
     """
-    Takes a list of iterable elements and returns a list of tuples,
+    Takes an iterable of sequence elements and returns a list of tuples,
     each containing the element and its length.
+
     Args:
-        lst (List[Iterable]): A list of iterable elements (e.g.
-          strings, lists, etc.).
+        lst (Iterable[Sequence]): An iterable of sequences
+        (e.g., strings, lists, tuples).
+
     Returns:
-        List[Tuple[Iterable, int]]: A list of tuples where each tuple contains
-        the element from the input list and its length.
+        List[Tuple[Sequence, int]]: A list of tuples with each
+        sequence and its length.
     """
     return [(i, len(i)) for i in lst]
