@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-
+Dfines a function that takes a list and returns a list of tuples
 """
 from typing import List, Tuple, Sized
 
