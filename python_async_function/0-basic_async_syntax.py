@@ -14,7 +14,8 @@ async def wait_random(max_delay: int = 10) -> float:
     seconds and eventually returns it.
 
     Args:
-        max_delay (_type_, optional): the max seconds for await. Defaults to 10:int.
+        max_delay (_type_, optional): the max seconds for await.
+        Defaults to 10:int.
 
     Returns:
         int: the random number.
