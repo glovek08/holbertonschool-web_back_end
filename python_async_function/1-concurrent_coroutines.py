@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""
-SPAM SPAM SPAM SPAM SPAM WITH CHICKEN SOUP AND SPAM.
-"""
-wait_random = __import__("0-basic_async_syntax").wait_random
 from sys import stdout
 from typing import List
 import asyncio
+
+wait_random = __import__("0-basic_async_syntax").wait_random
+"""
+SPAM SPAM SPAM SPAM SPAM WITH CHICKEN SOUP AND SPAM.
+"""
 
 
 async def wait_n(n: int, max_delay: int = 10) -> List[float]:

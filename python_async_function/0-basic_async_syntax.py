@@ -14,14 +14,13 @@ async def wait_random(max_delay: int = 10) -> float:
     seconds and eventually returns it.
 
     Args:
-        max_delay (_type_, optional): the max seconds for await.
-        Defaults to 10:int.
+        max_delay (_type_, optional): the max seconds for await.Defaults to 10:int.
 
     Returns:
         int: the random number.
     """
     if max_delay < 0:
         raise ValueError("max_delay must be higher than 0")
-    rand_int = uniform(0, max_delay)
-    await asyncio.sleep(uniform(0, rand_int))
-    return rand_int
+    snorlax = uniform(0, max_delay)
+    await asyncio.sleep(snorlax)
+    return snorlax
