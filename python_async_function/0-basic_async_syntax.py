@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Module that defines a basic coroutine.
+Module that defines a basic coroutine. 
 """
 
 import asyncio
