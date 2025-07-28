@@ -1,4 +1,4 @@
-#!/use/bin/env python3
+#!/usr/bin/env python3
 """
 Defines a coroutine that loops and has a little bit of delay.
 """
