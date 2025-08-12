@@ -1,0 +1,2 @@
+- **0-simple_helper_function.py**: Helps with simple pagination.
+- **HASD**: Very useful indeed.
