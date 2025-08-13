@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
+# fmt: off
 
 import csv
-import math
 from typing import List
 
 
@@ -25,36 +25,40 @@ class Server:
 
         return self.__dataset
 
-    def get_page(self, page: int = 1, page_size: int = 10) -> list[list] | None:
+    def get_page(
+            self,
+            page: int = 1,
+            page_size: int = 10) -> list[list] | None:
         """
         Retrieves a specific page of data from the dataset.
 
         Args:
-            page (int, optional): The page number to retrieve. Defaults to 1.
-            page_size (int, optional): The number of items per page. Defaults to 10.
+            page (int, optional): The page number to retrieve.
+            Defaults to 1.
+            page_size (int, optional): The number of items per page.
+            Defaults to 10.
 
         Returns:
-            list[list] | None: A list containing the items for the requested page,
-            or None if invalid parameters are provided. Returns an empty list if the
-            requested page is out of bounds.
+            List[List]: A list containing the items for the requested page,
+            or an empty list if the requested page is out of bounds.
         """
         try:
             assert isinstance(page, int) and page > 0
             assert isinstance(page_size, int) and page_size > 0
         except AssertionError as param_error:
             print(param_error)
-            return
+            return None
         data_range = index_range(page, page_size)
         dataset = self.dataset()
-        try:
-            dataset[data_range[0]]
-        except IndexError:
+        if data_range[0] >= len(dataset):
             return []
-        return dataset[data_range[0] : data_range[1]]
+        return dataset[data_range[0]:data_range[1]]
 
 
 def index_range(
-    page: int = 1, page_size: int = 10, filename: str = "Popular_Baby_Names.csv"
+    page: int = 1,
+    page_size: int = 10,
+    filename: str = "Popular_Baby_Names.csv"
 ) -> tuple[int, int]:
     """
     Calculate the start and end indexes for pagination.
@@ -62,7 +66,8 @@ def index_range(
     Args:
         page (int): The current page number (1-indexed).
         page_size (int): The number of items per page.
-        filename (str, optional): CSV file to use. Defaults to 'Popular_Baby_Names.csv'.
+        filename (str, optional): CSV file to use.
+        Defaults to 'Popular_Baby_Names.csv'.
 
     Returns:
         tuple: A tuple containing the start index and end
@@ -70,10 +75,10 @@ def index_range(
     """
     row_count = 0
     try:
-        my_file = open(filename, "r")
-        my_csv = csv.reader(my_file)
-        for row in my_csv:
-            row_count += 1
+        with open(filename, "r") as my_file:
+            my_csv = csv.reader(my_file)
+            for _ in my_csv:
+                row_count += 1
         if page > 0 and page_size > 0:
             start = (page - 1) * page_size
             end = start + page_size
@@ -85,11 +90,7 @@ def index_range(
             start = 0
             end = 0
         return (start, end)
-    except OSError as error:
-        print(error)
+    except OSError:
         return (0, 0)
-    except csv.Error as csv_error:
-        print(csv_error)
+    except csv.Error:
         return (0, 0)
-    finally:
-        my_file.close()
