@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 # fmt: off
+"""
+Simple pagination module.
+
+Provides:
+  - index_range: helper to compute start/end indexes for a page.
+  - Server: class exposing dataset() caching and get_page() pagination.
+
+Uses the Popular_Baby_Names.csv file as data source.
+"""
 
 import csv
 from typing import List
