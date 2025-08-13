@@ -46,7 +46,7 @@ class Server:
             assert isinstance(page, int) and page > 0
             assert isinstance(page_size, int) and page_size > 0
         except AssertionError as param_error:
-            raise param_error;
+            raise param_error
         data_range = index_range(page, page_size)
         dataset = self.dataset()
         if data_range[0] >= len(dataset):
