@@ -26,9 +26,8 @@ class Server:
         return self.__dataset
 
     def get_page(
-            self,
-            page: int = 1,
-            page_size: int = 10) -> list[list] | None:
+            self, page: int = 1, page_size: int = 10
+            ) -> list[list] | None:
         """
         Retrieves a specific page of data from the dataset.
 
