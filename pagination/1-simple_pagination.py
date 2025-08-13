@@ -27,7 +27,7 @@ class Server:
 
     def get_page(
             self, page: int = 1, page_size: int = 10
-            ) -> list[list] | None:
+            ) -> list[list]:
         """
         Retrieves a specific page of data from the dataset.
 
@@ -47,7 +47,7 @@ class Server:
             assert isinstance(page_size, int) and page_size > 0
         except AssertionError as param_error:
             print(param_error)
-            return None
+            return []
         data_range = index_range(page, page_size)
         dataset = self.dataset()
         if data_range[0] >= len(dataset):
