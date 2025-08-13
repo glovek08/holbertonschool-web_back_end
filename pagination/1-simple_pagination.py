@@ -39,8 +39,9 @@ class Server:
             Defaults to 10.
 
         Returns:
-            List[List]: A list containing the items for the requested page,
+            list[list]: A list containing the items for the requested page,
             or an empty list if the requested page is out of bounds.
+            None on debugging issues.
         """
         try:
             assert isinstance(page, int) and page > 0
