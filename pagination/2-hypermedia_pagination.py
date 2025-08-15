@@ -15,14 +15,14 @@ import csv
 from typing import List, TypedDict
 
 
-class HyperPage(TypedDict):
-    """Used to describe the dictionary returned by get_hype"""
-    page_size: int
-    page: int
-    data: list[list]
-    next_page: int | None
-    prev_page: int | None
-    total_pages: int
+# class HyperPage(TypedDict):
+#     """Used to describe the dictionary returned by get_hype"""
+#     page_size: int
+#     page: int
+#     data: list[list]
+#     next_page: int | None
+#     prev_page: int | None
+#     total_pages: int
 
 
 class Server:
@@ -73,7 +73,7 @@ class Server:
             return []
         return dataset[data_range[0]:data_range[1]]
 
-    def get_hyper(self, page: int = 1, page_size: int = 10) -> HyperPage:
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
         """
         Build hypermedia-style pagination metadata for a page.
 
