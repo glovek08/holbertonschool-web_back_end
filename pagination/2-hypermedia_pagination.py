@@ -12,17 +12,17 @@ Uses the Popular_Baby_Names.csv file as data source.
 
 
 import csv
-from typing import List, TypedDict
+from typing import TypedDict
 
 
-# class HyperPage(TypedDict):
-#     """Used to describe the dictionary returned by get_hype"""
-#     page_size: int
-#     page: int
-#     data: list[list]
-#     next_page: int | None
-#     prev_page: int | None
-#     total_pages: int
+class HyperPage(TypedDict):
+    """Used to describe the dictionary returned by get_hype"""
+    page_size: int
+    page: int
+    data: list[list]
+    next_page: int | None
+    prev_page: int | None
+    total_pages: int
 
 
 class Server:
@@ -35,7 +35,7 @@ class Server:
     def __init__(self):
         self.__dataset = None
 
-    def dataset(self) -> List[List]:
+    def dataset(self) -> list[list]:
         """Cached dataset"""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
@@ -73,7 +73,7 @@ class Server:
             return []
         return dataset[data_range[0]:data_range[1]]
 
-    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> HyperPage:
         """
         Build hypermedia-style pagination metadata for a page.
 
