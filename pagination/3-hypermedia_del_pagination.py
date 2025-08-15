@@ -38,9 +38,7 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self,
-                        index: int = None,
-                        page_size: int = 10) -> dict:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> dict:
         """
         Return a dictionary containing pagination information and data
         for a given index and page size.
