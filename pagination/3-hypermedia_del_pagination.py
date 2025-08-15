@@ -1,76 +1,133 @@
 #!/usr/bin/env python3
 # fmt: off
 """
-Deletion-resilient hypermedia pagination
+Deletion-resilient hypermedia pagination.
+Uses an ordered list of existing indexes plus bisect for efficient
+start-position lookup even after deletions.
 """
 
 import csv
-import math
-from typing import Optional
+from bisect import bisect_left
+from typing import Optional, TypedDict
+
+
+class PageResult(TypedDict):
+    index: int
+    next_index: int | None
+    page_size: int
+    data: list[list]
 
 
 class Server:
     """Server class to paginate a database of popular baby names."""
-
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
-        self.__dataset = None
-        self.__indexed_dataset = None
+        self.__dataset: list[list] | None = None
+        self.__indexed_dataset: dict[int, list] | None = None
+        self.__keys: list[int] = []
+        self.__deleted: int = 0
 
     def dataset(self) -> list[list]:
-        """Cached dataset"""
+        """Return cached dataset (without header)."""
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
-                dataset = [row for row in reader]
-            self.__dataset = dataset[1:]
-
+                rows = [row for row in reader]
+            self.__dataset = rows[1:]
         return self.__dataset
 
     def indexed_dataset(self) -> dict[int, list]:
-        """Dataset indexed by sorting position, starting at 0"""
+        """
+        Build once and return an indexed version of the dataset.
+        """
         if self.__indexed_dataset is None:
-            dataset = self.dataset()
-            truncated_dataset = dataset[:1000]
-            self.__indexed_dataset = {
-                i: dataset[i] for i in range(len(dataset))
-            }
+            data = self.dataset()[:1000]
+            self.__indexed_dataset = {i: row for i, row in enumerate(data)}
+            self.__keys = list(self.__indexed_dataset.keys())
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None, page_size: int = 10) -> dict:
+    def delete(self, idx: int) -> bool:
         """
-        Return a dictionary containing pagination information and data
-        for a given index and page size.
+        Simulate deletion of a row at raw index idx.
+        Returns True if deleted, False if idx not present.
+        """
+        indexed = self.indexed_dataset()
+        if idx in indexed:
+            del indexed[idx]
+            pos = bisect_left(self.__keys, idx)
+            if pos < len(self.__keys) and self.__keys[pos] == idx:
+                self.__keys.pop(pos)
+            self.__deleted += 1
+            return True
+        return False
+
+    def get_hyper_index(
+        self,
+        index: Optional[int] = None,
+        page_size: int = 10
+    ) -> PageResult:
+        """
+        Deletion-resilient pagination starting from (or after) 'index'.
 
         Args:
-            index (int, optional): The starting index for pagination.
-                Must be greater than 0.
-            page_size (int, optional): The number of items per page.
-                Must be greater than 1.
+            index: Requested starting raw index (0-based). If None, uses 0.
+            page_size: Desired number of items.
 
         Returns:
-            dict: A dictionary with the following keys:
-                - "index": The current index multiplied by the page size.
-                - "next_index": The index for the next page
-                  (current index * page size + 1).
-                - "page_size": The number of items per page.
-                - "data": The list of data items for the current page.
-
-        Raises:
-            AssertionError: If index is not greater than 0 or
-                page_size is not greater than 1.
+            PageResult dict:
+              - index: the raw index requested (original input or 0)
+              - next_index: raw index to use for next page (None if end)
+              - page_size: number of items actually returned
+              - data: list of row records
         """
         if index is None:
             index = 0
-        assert index > 0 and page_size > 1
-        ranged_data = self.indexed_dataset()
-        keys = sorted(ranged_data.keys())
-        page_keys = keys[index:index + page_size]
-        page_data = [ranged_data[k] for k in page_keys]
+        assert isinstance(index, int) and index >= 0
+        assert isinstance(page_size, int) and page_size > 0
+
+        indexed = self.indexed_dataset()
+        if not indexed or not self.__keys:
+            return {
+                "index": index,
+                "next_index": None,
+                "page_size": 0,
+                "data": []
+            }
+
+        start_pos = bisect_left(self.__keys, index)
+        if start_pos >= len(self.__keys):
+            return {
+                "index": index,
+                "next_index": None,
+                "page_size": 0,
+                "data": []
+            }
+
+        if any(k not in indexed for k in self.__keys[start_pos:start_pos + page_size]):
+            self.__keys = sorted(indexed.keys())
+            start_pos = bisect_left(self.__keys, index)
+            if start_pos >= len(self.__keys):
+                return {
+                    "index": index,
+                    "next_index": None,
+                    "page_size": 0,
+                    "data": []
+                }
+
+        end_pos = min(start_pos + page_size, len(self.__keys))
+        slice_keys = self.__keys[start_pos:end_pos]
+        data = []
+        for k in slice_keys:
+            row = indexed.get(k)
+            if row is not None:
+                data.append(row)
+
+        next_index = self.__keys[end_pos] if end_pos < len(self.__keys) else None
+
         return {
             "index": index,
-            "next_index": index * page_size + 1,
-            "page_size": page_size,
-            "data": page_data,
+            "next_index": next_index,
+            "page_size": len(data),
+            "data": data,
         }
