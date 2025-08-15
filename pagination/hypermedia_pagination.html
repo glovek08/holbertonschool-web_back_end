@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module hypermedia_pagination</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>hypermedia_pagination</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/gabriolo/Desktop/Holberton/holbertonschool-web_back_end/pagination/hypermedia_pagination.py">/home/gabriolo/Desktop/Holberton/holbertonschool-web_back_end/pagination/hypermedia_pagination.py</a></font></td></tr></table>
+    <p><tt>Simple&nbsp;pagination&nbsp;module.<br>
+&nbsp;<br>
+Provides:<br>
+&nbsp;&nbsp;-&nbsp;index_range:&nbsp;helper&nbsp;to&nbsp;compute&nbsp;start/end&nbsp;indexes&nbsp;for&nbsp;a&nbsp;page.<br>
+&nbsp;&nbsp;-&nbsp;<a href="#Server">Server</a>:&nbsp;class&nbsp;exposing&nbsp;dataset()&nbsp;caching&nbsp;and&nbsp;get_page()&nbsp;pagination.<br>
+&nbsp;<br>
+Uses&nbsp;the&nbsp;Popular_Baby_Names.csv&nbsp;file&nbsp;as&nbsp;data&nbsp;source.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="csv.html">csv</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="hypermedia_pagination.html#Server">Server</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Server">class <strong>Server</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Server">Server</a>&nbsp;class&nbsp;to&nbsp;paginate&nbsp;a&nbsp;database&nbsp;of&nbsp;popular&nbsp;baby&nbsp;names.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Server-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="Server-dataset"><strong>dataset</strong></a>(self) -&gt; List[List]</dt><dd><tt>Cached&nbsp;dataset</tt></dd></dl>
+
+<dl><dt><a name="Server-get_hyper"><strong>get_hyper</strong></a>(self, page: int = 1, page_size: int = 10) -&gt; dict</dt></dl>
+
+<dl><dt><a name="Server-get_page"><strong>get_page</strong></a>(self, page: int = 1, page_size: int = 10) -&gt; list[list]</dt><dd><tt>Retrieves&nbsp;a&nbsp;specific&nbsp;page&nbsp;of&nbsp;data&nbsp;from&nbsp;the&nbsp;dataset.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;(int,&nbsp;optional):&nbsp;The&nbsp;page&nbsp;number&nbsp;to&nbsp;retrieve.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;1.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int,&nbsp;optional):&nbsp;The&nbsp;number&nbsp;of&nbsp;items&nbsp;per&nbsp;page.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;10.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list[list]:&nbsp;A&nbsp;list&nbsp;containing&nbsp;the&nbsp;items&nbsp;for&nbsp;the&nbsp;requested&nbsp;page,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;an&nbsp;empty&nbsp;list&nbsp;if&nbsp;the&nbsp;requested&nbsp;page&nbsp;is&nbsp;out&nbsp;of&nbsp;bounds.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None&nbsp;on&nbsp;debugging&nbsp;issues.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>DATA_FILE</strong> = 'Popular_Baby_Names.csv'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-index_range"><strong>index_range</strong></a>(page: int = 1, page_size: int = 10, filename: str = 'Popular_Baby_Names.csv') -&gt; tuple[int, int]</dt><dd><tt>Calculate&nbsp;the&nbsp;start&nbsp;and&nbsp;end&nbsp;indexes&nbsp;for&nbsp;pagination.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;(int):&nbsp;The&nbsp;current&nbsp;page&nbsp;number&nbsp;(1-indexed).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int):&nbsp;The&nbsp;number&nbsp;of&nbsp;items&nbsp;per&nbsp;page.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str,&nbsp;optional):&nbsp;CSV&nbsp;file&nbsp;to&nbsp;use.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Defaults&nbsp;to&nbsp;'Popular_Baby_Names.csv'.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;A&nbsp;tuple&nbsp;containing&nbsp;the&nbsp;start&nbsp;index&nbsp;and&nbsp;end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;for&nbsp;the&nbsp;given&nbsp;page.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>List</strong> = typing.List</td></tr></table>
+</body></html>

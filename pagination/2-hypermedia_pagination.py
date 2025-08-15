@@ -10,8 +10,19 @@ Provides:
 Uses the Popular_Baby_Names.csv file as data source.
 """
 
+
 import csv
-from typing import List
+from typing import List, TypedDict
+
+
+class HyperPage(TypedDict):
+    """Used to describe the dictionary returned by get_hype"""
+    page_size: int
+    page: int
+    data: list[list]
+    next_page: int | None
+    prev_page: int | None
+    total_pages: int
 
 
 class Server:
@@ -62,20 +73,41 @@ class Server:
             return []
         return dataset[data_range[0]:data_range[1]]
 
-    def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
-        this_index_range = index_range(page, page_size)
-        next_page = this_index_range[1] + 1 or None
-        previous_page = this_index_range[0] - 1
-        if previous_page < 0:
-            previous_page = 0
-        total_pages = sum(this_index_range)
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> HyperPage:
+        """
+        Build hypermedia-style pagination metadata for a page.
+
+        Args:
+            page (int, optional): 1-indexed page number to retrieve.
+            Defaults to 1.
+            page_size (int, optional): Number of rows per page.
+            Defaults to 10.
+
+        Returns:
+            dict: {
+                "page_size": actual number of items returned in this page,
+                "page": current page number,
+                "data": list of rows for this page,
+                "next_page": next page number or None,
+                "prev_page": previous page number or None,
+                "total_pages": total number of pages across the dataset
+            }
+        """
         this_dataset = self.get_page(page, page_size)
+        total_items = len(self.dataset())
+        if page_size > 0:
+            total_pages = (total_items + page_size - 1) // page_size
+        else:
+            total_pages = 0
+        previous_page = page - 1 if page > 1 else None
+        next_page = page + 1 if page < total_pages else None
+        actual_page_size = len(this_dataset)
         return {
-            "page_size": page_size,
+            "page_size": actual_page_size,
             "page": page,
             "data": this_dataset,
             "next_page": next_page,
-            "previous_page": previous_page,
+            "prev_page": previous_page,
             "total_pages": total_pages,
         }
 
