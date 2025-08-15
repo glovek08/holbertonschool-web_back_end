@@ -69,7 +69,7 @@ class Server:
         page_keys = keys[index:index + page_size]
         page_data = [ranged_data[k] for k in page_keys]
         return {
-            "index": index * page_size,
+            "index": index,
             "next_index": index * page_size + 1,
             "page_size": page_size,
             "data": page_data,
