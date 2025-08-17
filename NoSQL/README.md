@@ -11,3 +11,5 @@
 * **10-update_topics.py**: changes all topics of a school document based on the name:.
 * **11-schools_by_topic.py**: returns the list of school having a specific topic.
 * **12-log_stats.py**: provides some stats about Nginx logs stored in MongoDB.
+
+For this project I've used Charmed Mongo because I'm running ubuntu 25.04. These are the [instructions](charmed_mongodb_guide.md) updated to work with charmed-mongo, it's better to install it on a docker container but this guide is for managing a local environment as to avoid potential Ubuntu versioning mismatch.
