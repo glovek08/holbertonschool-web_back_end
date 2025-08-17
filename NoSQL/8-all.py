@@ -3,14 +3,14 @@
 Module that defines a fucking mongo collection listing function
 """
 import pymongo
-from pymongo.collection import Collection
+# from pymongo.collection import Collection
 
 
-def list_all(mongo_collection: Collection) -> list:
+def list_all(mongo_collection) -> list:
     """
     Returns mongo collection list.
     Args:
-        mongo_collection (Collection): a PyMongo collection object.
+        mongo_collection: a PyMongo collection object.
     Returns:
         list: A list of dictionaries. Or an empty list if the collection is empty.
     """
