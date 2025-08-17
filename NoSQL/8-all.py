@@ -9,8 +9,8 @@ from pymongo.collection import Collection
 def list_all(mongo_collection: Collection) -> list:
     """
     Returns mongo collection list.
-    Arg:
-        - mongo_collection: a PyMongo collection object.
+    Args:
+        mongo_collection (Collection): a PyMongo collection object.
     Returns:
         list: A list of dictionaries. Or an empty list if the collection is empty.
     """
