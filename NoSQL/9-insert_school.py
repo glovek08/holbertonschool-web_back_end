@@ -6,7 +6,7 @@ import pymongo
 # from pymongo.collection import Collection
 
 
-def insert_school(mongo_collection, **kwargs) -> str:
+def insert_school(mongo_collection, **kwargs):
     """
     Insert a new document into the provided mongo collection.
     Args:
@@ -20,5 +20,5 @@ def insert_school(mongo_collection, **kwargs) -> str:
     # if mongo_collection is None or not kwargs:
     #     raise ValueError("Check your parameters son.")
     # print(f'Your arguments: {kwargs}')
-    inserted_data = mongo_collection.insert_one(kwargs)
-    return str(inserted_data.inserted_id)
+    new_doc = mongo_collection.insert_one(kwargs)
+    return new_doc.inserted_id
