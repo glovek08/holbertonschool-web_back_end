@@ -17,8 +17,8 @@ def insert_school(mongo_collection, **kwargs) -> str:
     Raises:
         ValueError if son didn't check his parameters.
     """
-    if mongo_collection is None or not kwargs:
-        raise ValueError("Check your parameters son.")
+    # if mongo_collection is None or not kwargs:
+    #     raise ValueError("Check your parameters son.")
     # print(f'Your arguments: {kwargs}')
     inserted_data = mongo_collection.insert_one(kwargs)
     return str(inserted_data.inserted_id)
