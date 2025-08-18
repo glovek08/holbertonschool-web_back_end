@@ -1,13 +1,13 @@
-export const taskFirst = () => {
+export function taskFirst() {
   const task = 'I prefer const when I can. ';
   return task;
-};
-export const getLast = () => ' is okay';
+}
+export function getLast() { return ' is okay'; }
 
-export const taskNext = () => {
+export function taskNext() {
   // eslint-disable-next-line prefer-const
   let combination = 'But sometimes let';
   return `${combination}${getLast()}`;
-};
+}
 
-console.log(`${taskFirst()}${taskNext()}`);
+// console.log(`${taskFirst()}${taskNext()}`);
