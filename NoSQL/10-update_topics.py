@@ -24,4 +24,4 @@ def update_topics(mongo_collection, name: str, topics: list[str]):
         { "name": name },
         { "$set": { "topics": topics } }
     )
-    print(edited_docs.upserted_id)
+    print(edited_docs)
