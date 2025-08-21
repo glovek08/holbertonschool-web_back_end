@@ -1,10 +1,10 @@
-const getNeighborgoodsList = () => {
+export default function getNeighborhoodsList() {
   this.sanFranciscoNeighborhoods = ['SOMA', 'Union Square'];
+
   const add = (newNeighborhood) => {
     this.sanFranciscoNeighborhoods.push(newNeighborhood);
-    return this.sanFranciscoNeighborhoods;
+    return self.sanFranciscoNeighborhoods;
   }
-  this.addNeighborhood = add;
-};
 
-export default getNeighborgoodsList;
+  this.addNeighborhood = add;
+}
