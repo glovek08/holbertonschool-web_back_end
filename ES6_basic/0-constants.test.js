@@ -3,7 +3,7 @@ import { taskFirst, getLast, taskNext } from './0-constants';
 describe('0-constants.js', () => {
   it('taskFirst returns correct string', () => {
     expect.assertions(1);
-    expect(taskFirst()).toBe('I prefer const when I can. ');
+    expect(taskFirst()).toBe('I prefer const when I can.');
   });
 
   it('getLast returns correct string', () => {
