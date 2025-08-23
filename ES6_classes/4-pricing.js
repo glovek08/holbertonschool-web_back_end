@@ -43,6 +43,8 @@ class Pricing {
   }
 }
 
+export default Pricing;
+
 // const pri1 = new Pricing(69, new Currency("€", "Euro"));
 
 // console.log("TEST: " + pri1.displayFullPrice());
