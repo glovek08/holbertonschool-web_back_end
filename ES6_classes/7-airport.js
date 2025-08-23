@@ -21,8 +21,8 @@ class Airport {
         }
         this._code = value;
     }
-    toString() {
-        //[object SFO]
-        return `[${typeof this} ${this.code}]`;
+    get [Symbol.toStringTag]() {
+        return this.code;
     }
 }
+export default Airport;
