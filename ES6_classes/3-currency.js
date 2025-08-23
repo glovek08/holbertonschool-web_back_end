@@ -25,6 +25,7 @@ class Currency {
         return `${this.name} (${this.code})`;
     }
 }
+export default Currency;
 
 // const curr1 = new Currency(4, "Cacumba");
 // console.log(curr1.displayFullCurrency());
