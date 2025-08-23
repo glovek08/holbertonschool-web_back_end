@@ -32,7 +32,7 @@ class Pricing {
     return `${this.amount} ${this.currency.displayFullCurrency()}`;
   }
 
-  convertPrice(amount, conversionRate) {
+  static convertPrice(amount, conversionRate) {
     if (typeof amount !== 'number') {
       throw new TypeError('Amount must be a number');
     }
