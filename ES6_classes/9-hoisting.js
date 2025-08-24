@@ -28,11 +28,11 @@ export class StudentHolberton {
     }
 
     get holbertonClass() {
-        return this.holbertonClass;
+        return this._holbertonClass;
     }
 
     get fullStudentDescription() {
-        return `${self._firstName} ${self._lastName} - ${self._holbertonClass.year} - ${self._holbertonClass.location}`;
+        return `${this.fullName} - ${this._holbertonClass.year} - ${this._holbertonClass.location}`;
     }
 }
 const student1 = new StudentHolberton('Guillaume', 'Salva', class2020);
