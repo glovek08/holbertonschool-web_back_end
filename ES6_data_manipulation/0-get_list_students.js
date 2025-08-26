@@ -12,5 +12,5 @@ const getListStudents = () => {
     students.push(new Student(5, "Serena", "San Francisco"));
     return students;
 }
-console.log(getListStudents());
-// export default getListStudents;
+// console.log(getListStudents());
+export default getListStudents;
