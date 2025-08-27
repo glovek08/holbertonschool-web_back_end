@@ -4,15 +4,15 @@ const hasValuesFromArray = (controlSet, myArray) => {
   if (!Array.isArray(myArray) || !(controlSet instanceof Set)) {
     throw new TypeError("Invalid argument type");
   }
-  let isInSet = true;
-  myArray.forEach((el) => {
-    if (controlSet.has(el)) {
-      return;
-    } else {
-      isInSet = false;
-      return;
-    }
-  });
-  return isInSet;
+//   let isInSet = true;
+//   for (let i = 0; i < myArray.length; i++) {
+//     if (!controlSet.has(myArray[i])) {
+//         isInSet = false;
+//         break;
+//     }
+//   }
+
+  const isInArray = (el) => controlSet.has(el);
+  return myArray.every(isInArray);
 };
 export default hasValuesFromArray;
