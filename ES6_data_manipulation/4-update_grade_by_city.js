@@ -8,4 +8,5 @@ const updateStudentGradeByCity = (students, city, newGrades) => {
     });
     return upgradedStudents;
 };
+export default updateStudentGradeByCity;
 
