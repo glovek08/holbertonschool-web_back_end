@@ -1,4 +1,4 @@
-export function createInt8TypedArray(length, position, value) {
+export default function createInt8TypedArray(length, position, value) {
   const MAX_BUFFER_SIZE = 2097152; // Max size of buffer, RangeError if exceeded catched.
   if (
     typeof length !== "number" ||
@@ -24,5 +24,5 @@ export function createInt8TypedArray(length, position, value) {
   }
   return myBuffer;
 }
-console.log(createInt8TypedArray(16, 14, 89));
+// console.log(createInt8TypedArray(16, 14, 89));
 // createInt8TypedArray(2097155, 100, 89);
