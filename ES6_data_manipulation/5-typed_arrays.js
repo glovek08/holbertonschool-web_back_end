@@ -22,7 +22,7 @@ export default function createInt8TypedArray(length, position, value) {
   } catch (error) {
     throw new RangeError();
   }
-  return myBuffer;
+  return dv1;
 }
 // console.log(createInt8TypedArray(16, 14, 89));
 // createInt8TypedArray(2097155, 100, 89);
