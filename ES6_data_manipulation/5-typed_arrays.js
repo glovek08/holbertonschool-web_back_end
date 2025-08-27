@@ -20,7 +20,7 @@ export default function createInt8TypedArray(length, position, value) {
   try {
     dv1.setInt8(position, value);
   } catch (error) {
-    throw new RangeError();
+    throw new RangeError("Position outside range");
   }
   return dv1;
 }
