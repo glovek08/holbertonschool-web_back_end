@@ -11,9 +11,6 @@ const groceriesList = () => {
   for (const [i, item] of itemNames.entries()) {
     myGroceries.set(item, itemAmount[i]);
   }
-  console.log(myGroceries);
+  return myGroceries;
 };
-
-
-groceriesList();
 export default groceriesList;
