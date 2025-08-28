@@ -4,7 +4,7 @@
 // Pasta, 1
 // Rice, 1
 // Banana, 5
-const groceriesList = () => {
+export default function groceriesList () {
   const myGroceries = new Map();
   const itemNames = ["Apples", "Tomatoes", "Pasta", "Rice", "Banana"];
   const itemAmount = [10, 10, 1, 1, 5];
@@ -13,4 +13,3 @@ const groceriesList = () => {
   }
   return myGroceries;
 };
-export default groceriesList;
