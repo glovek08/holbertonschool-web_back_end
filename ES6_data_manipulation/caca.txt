@@ -1,0 +1,201 @@
+// queryAPI.test.js
+import { queryAPI, weakMap } from './100-weak.js';
+
+describe('queryAPI and WeakMap functionality', () => {
+  
+  beforeEach(() => {
+    // Clear the WeakMap before each test (though we can't directly clear it)
+    // We'll use fresh endpoint objects for each test
+  });
+
+  describe('Endpoint validation', () => {
+    test('should throw error when protocol property is missing', () => {
+      const endpoint = { name: 'getUsers' };
+      
+      expect(() => queryAPI(endpoint)).toThrow('Incorrect endpoint format');
+    });
+
+    test('should throw error when name property is missing', () => {
+      const endpoint = { protocol: 'http' };
+      
+      expect(() => queryAPI(endpoint)).toThrow('Incorrect endpoint format');
+    });
+
+    test('should throw error when both properties are missing', () => {
+      const endpoint = {};
+      
+      expect(() => queryAPI(endpoint)).toThrow('Incorrect endpoint format');
+    });
+
+    test('should throw error when extra properties are present', () => {
+      const endpoint = { 
+        protocol: 'http', 
+        name: 'getUsers', 
+        extra: 'value' 
+      };
+      
+      expect(() => queryAPI(endpoint)).toThrow('Incorrect endpoint format');
+    });
+
+    test('should accept valid endpoint with exactly protocol and name', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      expect(() => queryAPI(endpoint)).not.toThrow();
+    });
+  });
+
+  describe('WeakMap tracking functionality', () => {
+    test('should track single call to endpoint', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      queryAPI(endpoint);
+      
+      expect(weakMap.get(endpoint)).toBe(1);
+    });
+
+    test('should increment counter for multiple calls to same endpoint', () => {
+      const endpoint = { protocol: 'https', name: 'getProfile' };
+      
+      queryAPI(endpoint);
+      expect(weakMap.get(endpoint)).toBe(1);
+      
+      queryAPI(endpoint);
+      expect(weakMap.get(endpoint)).toBe(2);
+      
+      queryAPI(endpoint);
+      expect(weakMap.get(endpoint)).toBe(3);
+    });
+
+    test('should track different endpoints separately', () => {
+      const endpoint1 = { protocol: 'http', name: 'getUsers' };
+      const endpoint2 = { protocol: 'https', name: 'getProfile' };
+      
+      queryAPI(endpoint1);
+      queryAPI(endpoint2);
+      queryAPI(endpoint1);
+      
+      expect(weakMap.get(endpoint1)).toBe(2);
+      expect(weakMap.get(endpoint2)).toBe(1);
+    });
+
+    test('should treat objects with same properties but different references as separate', () => {
+      const endpoint1 = { protocol: 'http', name: 'getUsers' };
+      const endpoint2 = { protocol: 'http', name: 'getUsers' };
+      
+      queryAPI(endpoint1);
+      queryAPI(endpoint2);
+      
+      expect(weakMap.get(endpoint1)).toBe(1);
+      expect(weakMap.get(endpoint2)).toBe(1);
+    });
+  });
+
+  describe('Rate limiting (5+ calls)', () => {
+    test('should allow up to 4 calls without error', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      queryAPI(endpoint); // 1
+      queryAPI(endpoint); // 2
+      queryAPI(endpoint); // 3
+      queryAPI(endpoint); // 4
+      
+      expect(weakMap.get(endpoint)).toBe(4);
+      expect(() => queryAPI(endpoint)).not.toThrow();
+    });
+
+    test('should throw error on 5th call', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      // Make 4 successful calls
+      queryAPI(endpoint);
+      queryAPI(endpoint);
+      queryAPI(endpoint);
+      queryAPI(endpoint);
+      
+      // 5th call should throw error
+      expect(() => queryAPI(endpoint)).toThrow('Endpoint load is high');
+    });
+
+    test('should throw error on 6th+ calls', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      // Make 4 successful calls
+      queryAPI(endpoint);
+      queryAPI(endpoint);
+      queryAPI(endpoint);
+      queryAPI(endpoint);
+      
+      // 5th call throws error
+      expect(() => queryAPI(endpoint)).toThrow('Endpoint load is high');
+      
+      // 6th call should also throw error
+      expect(() => queryAPI(endpoint)).toThrow('Endpoint load is high');
+    });
+
+    test('should track rate limit per endpoint independently', () => {
+      const endpoint1 = { protocol: 'http', name: 'getUsers' };
+      const endpoint2 = { protocol: 'https', name: 'getProfile' };
+      
+      // Make 4 calls to endpoint1
+      queryAPI(endpoint1);
+      queryAPI(endpoint1);
+      queryAPI(endpoint1);
+      queryAPI(endpoint1);
+      
+      // Make 3 calls to endpoint2
+      queryAPI(endpoint2);
+      queryAPI(endpoint2);
+      queryAPI(endpoint2);
+      
+      // endpoint2 should still work (only 3 calls)
+      expect(() => queryAPI(endpoint2)).not.toThrow();
+      expect(weakMap.get(endpoint2)).toBe(4);
+      
+      // endpoint1 should fail (5th call)
+      expect(() => queryAPI(endpoint1)).toThrow('Endpoint load is high');
+    });
+  });
+
+  describe('WeakMap instance', () => {
+    test('weakMap should be an instance of WeakMap', () => {
+      expect(weakMap).toBeInstanceOf(WeakMap);
+    });
+
+    test('should use endpoint object as key', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      queryAPI(endpoint);
+      
+      expect(weakMap.has(endpoint)).toBe(true);
+    });
+
+    test('should not have entry for unused endpoint', () => {
+      const endpoint = { protocol: 'http', name: 'getUsers' };
+      
+      expect(weakMap.has(endpoint)).toBe(false);
+    });
+  });
+
+  describe('Edge cases', () => {
+    test('should handle endpoints with different property order', () => {
+      const endpoint = { name: 'getUsers', protocol: 'http' };
+      
+      expect(() => queryAPI(endpoint)).not.toThrow();
+      expect(weakMap.get(endpoint)).toBe(1);
+    });
+
+    test('should handle string values with special characters', () => {
+      const endpoint = { protocol: 'http-s', name: 'get_users_2024' };
+      
+      expect(() => queryAPI(endpoint)).not.toThrow();
+      expect(weakMap.get(endpoint)).toBe(1);
+    });
+
+    test('should handle empty string values', () => {
+      const endpoint = { protocol: '', name: '' };
+      
+      expect(() => queryAPI(endpoint)).not.toThrow();
+      expect(weakMap.get(endpoint)).toBe(1);
+    });
+  });
+});
