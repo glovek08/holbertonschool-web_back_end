@@ -1,6 +1,6 @@
 export default function handleResponseFromAPI(promise) {
-  promise.then(handleFullfilled, handleRejected);
   console.log("Got a repsonse from the API");
+  return promise.then(handleFullfilled, handleRejected);
   function handleFullfilled() {
     return {
       status: 200,
