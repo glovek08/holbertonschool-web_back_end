@@ -4,27 +4,20 @@ import { uploadPhoto, createUser } from "./utils.js";
 // below to collectively resolve all promises and log body firstName lastName to the console.
 // function handleProfileSignup()
 // In the event of an error, log Signup system offline to the console
-export default function handleProfileSignup() {
+export default async function handleProfileSignup() {
   try {
-    Promise.all([uploadPhoto(), createUser()])
-      .then((values) => {
-        console.log(values);
-        for (let i = 0; i < values.length; i++) {
-          const obj = values[i];
-          if (obj.body) {
-            process.stdout.write(obj.body + " ");
-          }
-          if (obj.firstName && obj.lastName) {
-            console.log(obj.firstName, obj.lastName);
-            break;
-          }
-        }
-      })
-      .catch(() => {
-        console.log("Signup system offline");
-      });
-  } catch (error) {
-    console.log(error);
+    const [photoObj, userObj] = await Promise.all([
+      uploadPhoto(),
+      createUser()
+    ]);
+
+    if (photoObj.body && userObj.firstName && userObj.lastName) {
+      process.stdout.write(
+        `${photoObj.body} ${userObj.firstName} ${userObj.lastName}`
+      );
+    }
+  } catch {
+    process.stdout.write("Signup system offline");
   }
 }
 // handleProfileSignup();
