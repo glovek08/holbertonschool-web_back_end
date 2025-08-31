@@ -21,13 +21,15 @@ export default async function handleProfileSignup(
 ) {
   const userPromise = signUpUser(firstName, lastName);
   const photoPromise = uploadPhoto(fileName);
+
   const results = (
     await Promise.allSettled([userPromise, photoPromise])
-  ).map((responses) =>
-    responses.status === "fulfilled"
-      ? responses
-      : { status: responses.status, value: responses.reason }
+  ).map((res) =>
+    res.status === "fulfilled"
+      ? res
+      : { status: res.status, value: res.reason.toString() }
   );
+
   return results;
 }
 
