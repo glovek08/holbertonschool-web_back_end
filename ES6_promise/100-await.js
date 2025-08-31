@@ -11,22 +11,21 @@
 // }
 import { uploadPhoto, createUser } from "./utils.js";
 
-export default function asyncUploadUser() {
+export default async function asyncUploadUser() {
   return uploadPhoto()
-    .then((photoResponse) => {
-      return createUser()
-        .then((userResponse) => {
-          return {
-            photo: photoResponse,
-            user: userResponse
-          };
-        })
-        .catch(() => {
-          return {
-            photo: null,
-            user: null
-          };
-        });
+    .then(async (photoResponse) => {
+      try {
+            const userResponse = await createUser();
+            return {
+                photo: photoResponse,
+                user: userResponse
+            };
+        } catch {
+            return {
+                photo: null,
+                user: null
+            };
+        }
     })
     .catch(() => {
       return {
