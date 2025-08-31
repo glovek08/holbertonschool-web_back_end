@@ -12,12 +12,12 @@ export default async function handleProfileSignup() {
     ]);
 
     if (photoObj.body && userObj.firstName && userObj.lastName) {
-      process.stdout.write(
+      console.log(
         `${photoObj.body} ${userObj.firstName} ${userObj.lastName}`
       );
     }
   } catch {
-    process.stdout.write("Signup system offline");
+    console.log("Signup system offline");
   }
 }
 // handleProfileSignup();
