@@ -8,8 +8,12 @@ export default function handleProfileSignup() {
   try {
     Promise.all([uploadPhoto(), createUser()])
       .then((values) => {
+        console.log(values);
         for (let i = 0; i < values.length; i++) {
           const obj = values[i];
+          if (obj.body) {
+            process.stdout.write(obj.body + " ");
+          }
           if (obj.firstName && obj.lastName) {
             console.log(obj.firstName, obj.lastName);
             break;
