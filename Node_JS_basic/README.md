@@ -1,0 +1,7 @@
+- **0-console.js**: prints in STDOUT the string argument.
+- **1-stdin.js**: Execured through CLI, prints string, accepts user input, displays username.
+- **2-read_file.js**: attemps to read a database file synchronously.
+- **3-read_file_async.js**: attemps to read a database file asynchronously.
+- **4-http.js**: creates small HTTP server.
+- **5-http.js**: creates another small HTTP server.
+- **6-http_express.js**: ...
