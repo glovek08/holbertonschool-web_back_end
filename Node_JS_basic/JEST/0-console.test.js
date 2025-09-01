@@ -1,7 +1,7 @@
-import displayMessage from "./0-console";
+import displayMessage from "../0-console.js";
 
 (function() {
-  const displayMessage = require("./0-console");
+  const displayMessage = require("../0-console");
 
   describe("displayMessage", () => {
     it("logs the right passed string CJS", () => {
