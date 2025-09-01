@@ -25,6 +25,7 @@
 (function programita() {
   const readline = require("readline");
 
+  // Create a readline interface for user input/output
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -37,6 +38,7 @@
   rl.question(
     "Welcome to Holberton School, what is your name?\n",
     (name) => {
+      // Print the entered name
       console.log(`Your name is: ${name}`);
       rl.close();
     }
@@ -44,8 +46,9 @@
 
   /**
    * Exit event handler that logs a final message.
+   * Uses process.stdout.write to ensure consistent newline across platforms
    */
   process.on("exit", () => {
-    console.log("This important software is now closing\n");
+    process.stdout.write("This important software is now closing\n");
   });
 })();
