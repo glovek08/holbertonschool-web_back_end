@@ -14,7 +14,7 @@
  * @function programita
  * @description
  * Interactive CLI program wrapped in an IIFE to avoid polluting
- * the global scope and to make it easier to test with Mocha.
+ * the global scope and to make it easier to test with Mocha/JEST.
  *
  * Steps:
  * 1. Prompts the user for their name.
@@ -39,7 +39,7 @@
     "Welcome to Holberton School, what is your name?\n",
     (name) => {
       // Print the entered name
-      console.log(`Your name is: ${name}`);
+      process.stdout.write(`Your name is: ${name}\r`);
       rl.close();
     }
   );
