@@ -1,6 +1,6 @@
 // Create a program named 1-stdin.js that will be executed through command line:
-//     It should display the message Welcome to Holberton School,
-//     what is your name? (followed by a new line)
+//     It should display the message
+//     Welcome to Holberton School, what is your name? (followed by a new line)
 //     The user should be able to input their name on a new line
 //     The program should display Your name is: INPUT
 //     When the user ends the program, it should display
@@ -23,12 +23,12 @@
  */
 
 (function programita() {
-  const readline = require("readline");
+  const readline = require('readline');
 
   // Create a readline interface for user input/output
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
   /**
@@ -36,19 +36,19 @@
    * @param {string} name - The name entered by the user.
    */
   rl.question(
-    "Welcome to Holberton School, what is your name?\n",
+    'Welcome to Holberton School, what is your name?\n',
     (name) => {
       // Print the entered name
-      process.stdout.write(`Your name is: ${name}\r`);
+      process.stdout.write(`Your name is: ${name}\n`);
       rl.close();
-    }
+    },
   );
 
   /**
    * Exit event handler that logs a final message.
    * Uses process.stdout.write to ensure consistent newline across platforms
    */
-  process.on("exit", () => {
-    process.stdout.write("This important software is now closing\n");
+  process.on('exit', () => {
+    process.stdout.write('This important software is now closing\n');
   });
-})();
+}());

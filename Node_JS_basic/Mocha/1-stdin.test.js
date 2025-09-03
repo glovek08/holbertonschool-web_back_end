@@ -33,6 +33,7 @@ describe("programita IIFE", () => {
     sinon.assert.calledOnce(rlMock.close);
   });
 
+
   it("logs the exit message", () => {
     require("../1-stdin");
     const exitCall = logStub
