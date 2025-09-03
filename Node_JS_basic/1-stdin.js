@@ -1,33 +1,52 @@
-// Create a program named 1-stdin.js that will be executed through command line:
-//     It should display the message
-//     Welcome to Holberton School, what is your name? (followed by a new line)
-//     The user should be able to input their name on a new line
-//     The program should display Your name is: INPUT
-//     When the user ends the program, it should display
-//     This important software is now closing (followed by a new line)
-// Requirements:
-//     Your code will be tested through a child process,
-//     make sure you have everything you need for that
+const fs = require('fs');
+const { Writable } = require('stream');
+const appState = {
+  isInteractive: process.stdin.isTTY,
+  isClosed: false,
+};
 
-/**
- * --Auto-generated JSDoc using Mintlify--
- * @description
- * Interactive CLI program wrapped in an IIFE to avoid polluting
- * the global scope and to make it easier to test with Mocha/JEST.
- *
- * Steps:
- * 1. Prompts the user for their name.
- * 2. Prints the entered name.
- * 3. On exit, logs a closing message.
- */
+class killStdout extends Writable {
+  _write(chunk, encoding, callback) {
+    fs.write(1, chunk, (err) => {
+      if (err) {
+        console.error('Failed to write to stdout', err);
+        process.exit(1);
+      }
+      callback();
+    });
+  }
+}
 
-process.stdout.write('Welcome to Holberton School, what is your name?\n');
+const customStdout = new killStdout();
 
-process.stdin.on('data', (data) => {
-  process.stdout.write(`Your name is: ${data.toString()}`);
-  process.exit();
-});
+const printClosingMessage = () => {
+  if (!appState.isClosed) {
+    appState.isClosed = true;
+    customStdout.write('This important software is now closing\n');
+  }
+};
 
-process.on('exit', () => {
-  process.stdout.write('This important software is now closing\n');
-});
+async function run() {
+  customStdout.write('Welcome to Holberton School, what is your name?\n');
+  process.on('exit', printClosingMessage);
+  process.on('SIGINT', () => {
+    process.exit(0);
+  });
+  try {
+    for await (const chunk of process.stdin) {
+      const prefix = Buffer.from('Your name is: ');
+      const name = Buffer.from(chunk.toString().trim());
+      const outputBuffer = Buffer.concat([prefix, name, Buffer.from('\n')]);
+
+      customStdout.write(outputBuffer);
+      if (appState.isInteractive) {
+        process.exit(0);
+      }
+    }
+  } catch (error) {
+    console.error('An unexpected error occurred:', error);
+    process.exit(1);
+  }
+}
+
+run();
