@@ -11,7 +11,6 @@
 
 /**
  * --Auto-generated JSDoc using Mintlify--
- * @function programita
  * @description
  * Interactive CLI program wrapped in an IIFE to avoid polluting
  * the global scope and to make it easier to test with Mocha/JEST.
@@ -22,33 +21,13 @@
  * 3. On exit, logs a closing message.
  */
 
-(function programita() {
-  const readline = require('readline');
+process.stdout.write('Welcome to Holberton School, what is your name?\n');
 
-  // Create a readline interface for user input/output
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+process.stdin.on('data', (data) => {
+  process.stdout.write(`Your name is: ${data.toString()}`);
+  process.exit();
+});
 
-  /**
-   * Prompt for the user's name and print it.
-   * @param {string} name - The name entered by the user.
-   */
-  rl.question(
-    'Welcome to Holberton School, what is your name?\n',
-    (name) => {
-      // Print the entered name
-      process.stdout.write(`Your name is: ${name}\n`);
-      rl.close();
-    },
-  );
-
-  /**
-   * Exit event handler that logs a final message.
-   * Uses process.stdout.write to ensure consistent newline across platforms
-   */
-  process.on('exit', () => {
-    process.stdout.write('This important software is now closing\n');
-  });
-}());
+process.on('exit', () => {
+  process.stdout.write('This important software is now closing\n');
+});
