@@ -1,47 +1,73 @@
-const sinon = require("sinon");
-const readline = require("readline");
+const { spawn } = require('child_process');
+const { expect } = require('chai');
 
-describe("programita IIFE", () => {
-  let rlMock;
-  let questionStub;
-  let logStub;
+describe('Complex Command-Line Interaction Tests (1-stdin.js)', () => {
+  it('should handle piped input and display both messages', (done) => {
+    const scriptProcess = spawn('node', ['1-stdin.js']);
+    let output = '';
+    const testName = 'Tester';
 
-  beforeEach(() => {
-    questionStub = sinon.stub();
-    rlMock = { question: questionStub, close: sinon.spy() };
-    sinon.stub(readline, "createInterface").returns(rlMock);
-    logStub = sinon.stub(console, "log");
-    sinon.stub(process, "on").callsFake((event, cb) => {
-      if (event === "exit") cb();
+    scriptProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+    scriptProcess.on('close', (code) => {
+      const expectedOutput = [
+        'Welcome to Holberton School, what is your name?',
+        `Your name is: ${testName}`,
+        'This important software is now closing',
+      ].join('\n') + '\n';
+      
+      expect(output).to.equal(expectedOutput);
+      expect(code).to.equal(0, 'Process should exit cleanly');
+      done();
+    });
+    scriptProcess.stdin.write(`${testName}\n`);
+    scriptProcess.stdin.end();
+  });
+  it('should prompt, accept input, and exit cleanly in interactive mode', (done) => {
+    const scriptProcess = spawn('node', ['1-stdin.js'], { stdio: 'pipe' });
+    let output = '';
+    const testName = 'InteractiveUser';
+
+    scriptProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    scriptProcess.on('close', (code) => {
+      const expectedInitialOutput = 'Welcome to Holberton School, what is your name?\n';
+      const expectedSecondOutput = `Your name is: ${testName}\n`;
+      const expectedFinalOutput = 'This important software is now closing\n';
+
+      expect(output).to.include(expectedInitialOutput);
+      expect(output).to.include(expectedSecondOutput);
+      expect(output).to.include(expectedFinalOutput);
+      expect(code).to.equal(0);
+      done();
+    });
+    scriptProcess.stdout.once('data', () => {
+      scriptProcess.stdin.write(`${testName}\n`);
     });
   });
 
-  afterEach(() => {
-    sinon.restore();
-  });
+  it('should display closing message on SIGINT (Ctrl+C)', (done) => {
+    const scriptProcess = spawn('node', ['1-stdin.js'], { stdio: 'pipe' });
+    let output = '';
 
-  it("asks for the user's name and logs it", () => {
-    questionStub.callsFake((prompt, cb) => cb("Gabriel"));
-    require("../1-stdin");
+    scriptProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
 
-    sinon.assert.calledWith(
-      questionStub,
-      "Welcome to Holberton School, what is your name?\n",
-      sinon.match.func
-    );
-    sinon.assert.calledWith(logStub, "Your name is: Gabriel");
-    sinon.assert.calledOnce(rlMock.close);
-  });
+    scriptProcess.on('close', () => {
+      const expectedPrompt = 'Welcome to Holberton School, what is your name?\n';
+      const expectedClosing = 'This important software is now closing\n';
+      
+      expect(output).to.contain(expectedPrompt);
+      expect(output).to.contain(expectedClosing);
+      done();
+    });
 
-
-  it("logs the exit message", () => {
-    require("../1-stdin");
-    const exitCall = logStub
-      .getCalls()
-      .some((call) =>
-        call.calledWith("This important software is now closing\n")
-      );
-    if (!exitCall) throw new Error("Exit message was not logged");
-    // I haven't been able to capture the exit log, too difficult. moving on...
+    scriptProcess.stdout.once('data', () => {
+      scriptProcess.kill('SIGINT');
+    });
   });
 });
