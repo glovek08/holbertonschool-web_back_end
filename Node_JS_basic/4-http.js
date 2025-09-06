@@ -13,16 +13,16 @@
 // Hello Holberton School!
 // bob@dylan:~$
 
-const { createServer } = require('node:http');
+const { createServer } = require("node:http");
 // const os = require('os');
 
 const port = 1245;
-const hostname = 'localhost';
+const hostname = "localhost";
 
 const app = createServer((req, res) => {
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.write('Hello Holberton School!');
+  res.setHeader("Content-Type", "text/plain");
+  res.write("Hello Holberton School!");
   res.end();
 });
 
@@ -39,3 +39,5 @@ app.listen(port, hostname, (error) => {
   //   console.log(`Hostname: ${os.hostname}`);
   // }
 });
+
+module.exports = app;
