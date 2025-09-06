@@ -1,9 +1,7 @@
-const fs = require("fs");
-const { parse } = require("csv-parse");
-// const { stringify } = require('csv-stringify');
-const { Transform } = require("stream");
-// the async pipeline comes from /stream/promises, sync comes from /stream.
-const { pipeline } = require("stream/promises");
+const fs = require('fs');
+// const { parse } = require('csv-parse');
+// const { Transform } = require('stream');
+// const { pipeline } = require('stream/promises');
 
 // Using the database database.csv (provided in project description),
 // create a function countStudents in the file 3-read_file_async.js
@@ -20,111 +18,85 @@ const { pipeline } = require("stream/promises");
 // CSV file can contain empty lines (at the end) - and they are not a
 // valid student!
 
-const INPUT = "database.csv";
-// const OUTPUT = 'csv-throwup.csv';
-
-const expectedColumns = ["firstname", "lastname", "age", "field"];
-
-// normalizing each record.
-class NormalizeRows extends Transform {
-  constructor() {
-    super({ objectMode: true });
-    this.count = 0;
-    this.fieldGroups = {};
-  }
-
-  _transform(record, _enc, cb) {
-    // normalizing keys to upper->lower case.
-    const normalized = {};
-    for (const col of expectedColumns) {
-      const foundKey = Object.keys(record).find(
-        (k) => k.toLowerCase() === col.toLowerCase()
-      );
-      normalized[col] = (record[foundKey] !== null &&
-      record[foundKey] !== undefined
-        ? record[foundKey]
-        : ""
-      ).trim();
-    }
-
-    if (!normalized.firstname || !normalized.field) {
-      return cb();
-    }
-
-    this.count += 1;
-    if (!this.fieldGroups[normalized.field]) {
-      this.fieldGroups[normalized.field] = [];
-    }
-    this.fieldGroups[normalized.field].push(normalized.firstname);
-
-    this.push(normalized);
-    cb();
-    return 1;
-  }
-
-  _final(cb) {
-    console.log(`Number of students: ${this.count}`);
-    for (const [fld, list] of Object.entries(this.fieldGroups)) {
-      console.log(
-        `Number of students in ${fld}: ${
-          list.length
-        }. List: ${list.join(", ")}`
-      );
-    }
-    cb();
-  }
-}
-
-// async function rebuildCSV(fileURL = INPUT) {
-//   const input = fs.createReadStream(fileURL);
-
-//   const parser = parse({
-//     columns: true,
-//     trim: true,
-//     skip_empty_lines: true,
-//   });
-
-//   const normalizer = new NormalizeRows();
-
-//   const stringifier = stringify({
-//     header: true,
-//     columns: expectedColumns,
-//   });
-
-//   const output = fs.createWriteStream(OUTPUT, { flags: 'w' });
-
-//   try {
-//     await pipeline(input, parser, normalizer, stringifier, output);
-//   } catch (err) {
-//     throw new Error('Cannot load the database');
-//   }
-// }
+const INPUT = 'database.csv';
+const expectedColumns = ['firstname', 'lastname', 'age', 'field'];
 
 function countStudents(fileURL = INPUT) {
-  if (typeof fileURL !== "string") {
-    throw new TypeError("File URL invalid data type");
+  if (typeof fileURL !== 'string') {
+    throw new TypeError('File URL invalid data type');
   }
-  return new Promise((resolve, reject) => {
-    try {
-      const input = fs.createReadStream(fileURL);
 
-      const parser = parse({
-        columns: true,
-        trim: true,
-        skip_empty_lines: true
+  return new Promise((resolve, reject) => {
+    fs.readFile(fileURL, (err, buffer) => {
+      if (err) return reject(new Error('Cannot load the database'));
+
+      let count = 0;
+      const fieldGroups = {};
+      const expectedColumnsSet = new Set(
+        expectedColumns.map((c) => c.toLowerCase()),
+      );
+
+      const lines = [];
+      let currentLine = [];
+      let currentCell = [];
+
+      for (let i = 0; i < buffer.length; i += 1) {
+        const byte = buffer[i];
+        if (byte === 10 || byte === 13) { // new line and return characters
+          if (currentCell.length > 0 || currentLine.length > 0) {
+            currentLine.push(Buffer.from(currentCell).toString().trim());
+            currentCell = [];
+            if (currentLine.some((c) => c)) {
+              lines.push(currentLine);
+            }
+            currentLine = [];
+          }
+          if (byte === 13 && buffer[i + 1] === 10) i += 1;
+        } else if (byte === 44) { // comma
+          currentLine.push(Buffer.from(currentCell).toString().trim());
+          currentCell = [];
+        } else {
+          currentCell.push(byte);
+        }
+      }
+
+      if (currentCell.length || currentLine.length) {
+        currentLine.push(Buffer.from(currentCell).toString().trim());
+        if (currentLine.some((c) => c)) lines.push(currentLine);
+      }
+
+      if (lines.length === 0) return resolve();
+      const header = lines.shift().map((h) => h.toLowerCase());
+
+      lines.forEach((line) => {
+        const record = {};
+        header.forEach((col, i) => {
+          if (expectedColumnsSet.has(col)) {
+            const charAtLine = ((record[col] = line[i]) || '');
+            return charAtLine;
+          }
+          return null;
+        });
+        if (!record.firstname || !record.field) return;
+
+        count += 1;
+        if (!fieldGroups[record.field]) fieldGroups[record.field] = [];
+        fieldGroups[record.field].push(record.firstname);
       });
 
-      const normalizer = new NormalizeRows();
+      console.log(`Number of students: ${count}`);
+      Object.entries(fieldGroups).forEach(([fld, list]) => {
+        console.log(
+          `Number of students in ${fld}: ${list.length}. List: ${list.join(', ')}`,
+        );
+      });
 
-      pipeline(input, parser, normalizer)
-        .then(() => resolve())
-        .catch(() => reject(new Error("Cannot load the database")));
-    } catch (err) {
-      reject(new Error("Cannot load the database"));
-    }
+      resolve();
+      return 1;
+    });
   });
 }
 
-// countStudents("Pepe");
+// countStudents("mamacito");
 
 module.exports = countStudents;
