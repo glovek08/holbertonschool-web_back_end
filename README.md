@@ -105,17 +105,20 @@ print(API_KEY)
 
 <i>If you want to go pro mode, you can learn to use [pyenv](https://github.com/pyenv/pyenv), which can manage multiple Python versions seamlessly. For most projects, .env + python-dotenv is enough.</i>
 
-**☢️WARNING☢️**
+**☢️ WARNING ☢️**
 
 Make sure your `.env` file is listed in your `.gitignore`.  
 Exposing environment variables (like API keys, passwords, tokens) is the mark of an unenlightened programmer. A major red flag.
 
-#### Loading virtual enviornments to Docker containers
+---
+
+#### Loading virtual environments to Docker containers
 
 You can pass environment variables from your Python virtual environment into a Docker container. This adds an extra layer of security, keeping sensitive data (like API keys or passwords) out of your code.
 There are a couple of ways to do this.
 
-Manually via the command line when starting a container:
+Manually via the command line when starting a container:<br>
+<i>(Assuming API_KEY has been loaded into your environment hence the $, otherwise just use a inject the string directly).</i>
 ```bash
 docker run -e API_KEY=$API_KEY -e DB_PASSWORD=$DB_PASSWORD my-image
 ```
@@ -124,6 +127,12 @@ Using a .env file and Docker’s `--env-file` option:
 docker run --env-file .env my-image
 ```
 Or using the Docker interface, you can load them in the dialog that appears when creating a new container. Make sure your Docker client is up-to-date.
+
+---
+
+#### JavaScript "venv" using Node Version Manager (NVM)
+
+Check how to run different versions inside the NoSQL project's README: [Instructions Here](https://github.com/glovek08/holbertonschool-web_back_end/tree/main/NoSQL)
 
 ## License
 
