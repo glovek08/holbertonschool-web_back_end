@@ -4,6 +4,7 @@ const { stringify } = require('csv-stringify');
 const { Transform } = require('stream');
 // the async pipeline comes from /stream/promises, sync comes from /stream.
 const { pipeline } = require('stream/promises');
+const { count } = require('console');
 
 // Using the database database.csv (provided in project description),
 // create a function countStudents in the file 3-read_file_async.js
@@ -40,11 +41,7 @@ class NormalizeRows extends Transform {
       const foundKey = Object.keys(record).find(
         (k) => k.toLowerCase() === col.toLowerCase(),
       );
-      normalized[col] = (record[foundKey] !== null
-      && record[foundKey] !== undefined
-        ? record[foundKey]
-        : ''
-      ).trim();
+      normalized[col] = (record[foundKey] ?? '').trim();
     }
 
     if (!normalized.firstname || !normalized.field) {
@@ -59,24 +56,21 @@ class NormalizeRows extends Transform {
 
     this.push(normalized);
     cb();
-    return 1;
   }
 
   _final(cb) {
     console.log(`Number of students: ${this.count}`);
     for (const [fld, list] of Object.entries(this.fieldGroups)) {
       console.log(
-        `Number of students in ${fld}: ${
-          list.length
-        }. List: ${list.join(', ')}`,
+        `Number of students in ${fld}: ${list.length}. List: ${list.join(', ')}`,
       );
     }
     cb();
   }
 }
 
-async function rebuildCSV() {
-  const input = fs.createReadStream(INPUT);
+async function rebuildCSV(fileURL = INPUT) {
+  const input = fs.createReadStream(fileURL);
 
   const parser = parse({
     columns: true,
@@ -95,17 +89,32 @@ async function rebuildCSV() {
 
   try {
     await pipeline(input, parser, normalizer, stringifier, output);
-    // console.log(`Wrote cleaned CSV to ${OUTPUT}`);
   } catch (err) {
     throw new Error('Cannot load the database');
   }
 }
 
-(async function countStudents(fileURL = INPUT) {
-  if (typeof fileURL !== 'string') {
-    throw new TypeError('File URL invalid data type');
-  }
-  rebuildCSV().catch((err) => console.error(err));
-}());
+function countStudents(fileURL=INPUT) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const input = fs.createReadStream(fileURL);
 
-module.exports = rebuildCSV;
+      const parser = parse({
+        columns: true,
+        trim: true,
+        skip_empty_lines: true,
+      });
+
+      const normalizer = new NormalizeRows();
+
+      await pipeline(input, parser, normalizer);
+      resolve();
+    } catch (err) {
+      reject(new Error('Cannot load the database'));
+    }
+  });
+}
+
+// countStudents('pepe');
+
+module.exports = countStudents;

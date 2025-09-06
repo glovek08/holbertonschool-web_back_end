@@ -110,11 +110,11 @@ function rebuildCSV() {
   });
 }
 
-(function countStudents(fileURL = INPUT) {
+function countStudents(fileURL = INPUT) {
   if (typeof fileURL !== "string") {
     throw new TypeError("File URL invalid data type");
   }
   rebuildCSV();
-})();
+};
 
 module.exports = rebuildCSV;
