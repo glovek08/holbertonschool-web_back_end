@@ -1,6 +1,6 @@
 // In a file named 4-http.js, create a small HTTP server using the http module:
-//     It should be assigned to the variable app and this one must be exported
-//     HTTP server should listen on port 1245
+//     It should be assigned to the variable app and this one must be exPORTed
+//     HTTP server should listen on PORT 1245
 //     Displays Hello Holberton School! in the page body for any endpoint as plain text
 // In terminal 1:
 // bob@dylan:~$ node 4-http.js
@@ -13,20 +13,20 @@
 // Hello Holberton School!
 // bob@dylan:~$
 
-const { createServer } = require('node:http');
+const { createServer } = require("node:http");
 // const os = require('os');
 
-const port = 1245;
-const hostname = 'localhost';
+const PORT = 1245;
+const HOSTNAME = "localhost";
 
 const app = createServer((req, res) => {
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.write('Hello Holberton School!');
+  res.setHeader("Content-Type", "text/plain");
+  res.write("Hello Holberton School!");
   res.end();
 });
 
-app.listen(port, hostname, (error) => {
+app.listen(PORT, HOSTNAME, (error) => {
   if (error) {
     console.error(`Something bad happened: ${error}`);
   }
@@ -35,8 +35,8 @@ app.listen(port, hostname, (error) => {
   //   console.log(
   //     `Server listening on ${serverAddr.family}${serverAddr.address}:${serverAddr.port}
   //   `);
-  //   console.log(`Server running at http://${hostname}:${port}/`);
-  //   console.log(`Hostname: ${os.hostname}`);
+  //   console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
+  //   console.log(`HOSTNAME: ${os.hostname}`);
   // }
 });
 
