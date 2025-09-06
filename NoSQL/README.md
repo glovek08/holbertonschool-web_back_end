@@ -20,9 +20,18 @@ Now using node v20.19.5 (npm v10.8.2)
 
 You can switch between versions using `nvm use <version>`, or `nvm use node` to return to the latest version in your system. Also `nvm install --lts` will install the latest.
 
-Use `npm install` to install the dependencies using Node v20.
+Use `npm install` to install the dependencies using Node v20. It will look at your `package.json` and install what's inside it. You can manually tweak it if you're using specific dependencies version.
+After you modify it run this command to purge all dependencies:
 
-### Set up Docker with different a MongoDB
+```bash
+rm -rf node_modules package-lock.json
+```
+
+Then run `npm install` again to run a clean installation of those dependencies which will be stored in `node_modules`.
+
+<i>You should add node_modules to `.gitignore` since it can become quite bloated for medium-large projects).</i>
+
+### Set up Docker container with a different MongoDB version
 
 One of the most annoying problem I've encountered in this project was learning mongosh but not being able to use it. I struggled to match versions with the checker.
 I started this project with MongoDB v8 pre-installed and I didn't want to lose my configuration, so I used a Docker container to run a different MongoDB version.
@@ -30,6 +39,9 @@ I started this project with MongoDB v8 pre-installed and I didn't want to lose m
 The easiest way to set up a MongoDB container is to download the image from <strong>DockerHub</strong>, forward the ports to your local machine by specifying `host.docker.internal` as the hostname environment variable.
 
 Or from Docker CLI
+
+* **7500** will be your host port.
+* **27017** is the default MongoDB port.
 
 ```bash
 docker pull mongo:4.4
@@ -49,11 +61,10 @@ $ docker exec -it <your-mongo-container-name> mongo -u root -p password
 ```
 
 Or connect it to your local `mongo/mongosh`
+
 ```bash
 $ mongosh "mongodb://root:password@localhost:7500"
 ```
-
-
 
 For this project I've used Charmed Mongo because I'm running ubuntu 25.04. These are the [instructions](charmed_mongodb_guide.md) updated to work with charmed-mongo, it's better to install it on a docker container but this guide is for managing a local environment as to avoid potential Ubuntu versioning mismatch.
 
