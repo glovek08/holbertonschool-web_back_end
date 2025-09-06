@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require("fs");
 // const { parse } = require('csv-parse');
 // const { Transform } = require('stream');
 // const { pipeline } = require('stream/promises');
@@ -18,22 +18,54 @@ const fs = require('fs');
 // CSV file can contain empty lines (at the end) - and they are not a
 // valid student!
 
-const INPUT = 'database.csv';
-const expectedColumns = ['firstname', 'lastname', 'age', 'field'];
+const INPUT = "database.csv";
+const expectedColumns = ["firstname", "lastname", "age", "field"];
 
+/**
+ * Asynchronously reads and processes a student database CSV file.
+ * Counts total students and groups them by field, then logs the results to console.
+ *
+ * The CSV file should contain headers matching the expected columns.
+ * Empty lines and records without firstname or field are ignored.
+ *
+ * @async
+ * @function countStudents
+ * @param {string} [fileURL=INPUT] - Path to the CSV file to process
+ * @returns {Promise<void>} A promise that resolves when processing is complete
+ * @throws {TypeError} When fileURL is not a string
+ * @throws {Error} When the database file cannot be loaded
+ *
+ * @example
+ * // Using default file
+ * countStudents()
+ *   .then(() => console.log('Processing complete'))
+ *   .catch(err => console.error('Error:', err));
+ *
+ * @example
+ * // Using custom file path
+ * countStudents('./students.csv')
+ *   .then(() => console.log('Processing complete'))
+ *   .catch(err => console.error('Error:', err));
+ *
+ * @example
+ * // Expected console output format:
+ * // Number of students: 10
+ * // Number of students in CS: 6. List: Johann, Arielle, Jonathan, Emmanuel, Guillaume, Katie
+ * // Number of students in SWE: 4. List: Guillaume, Joseph, Paul, Tommy
+ */
 function countStudents(fileURL = INPUT) {
-  if (typeof fileURL !== 'string') {
-    throw new TypeError('File URL invalid data type');
+  if (typeof fileURL !== "string") {
+    throw new TypeError("File URL invalid data type");
   }
 
   return new Promise((resolve, reject) => {
     fs.readFile(fileURL, (err, buffer) => {
-      if (err) return reject(new Error('Cannot load the database'));
+      if (err) return reject(new Error("Cannot load the database"));
 
       let count = 0;
       const fieldGroups = {};
       const expectedColumnsSet = new Set(
-        expectedColumns.map((c) => c.toLowerCase()),
+        expectedColumns.map((c) => c.toLowerCase())
       );
 
       const lines = [];
@@ -42,9 +74,14 @@ function countStudents(fileURL = INPUT) {
 
       for (let i = 0; i < buffer.length; i += 1) {
         const byte = buffer[i];
-        if (byte === 10 || byte === 13) { // new line and return characters
+        if (byte === 10 || byte === 13) {
+          // new line and return characters
           if (currentCell.length > 0 || currentLine.length > 0) {
-            currentLine.push(Buffer.from(currentCell).toString().trim());
+            currentLine.push(
+              Buffer.from(currentCell)
+                .toString()
+                .trim()
+            );
             currentCell = [];
             if (currentLine.some((c) => c)) {
               lines.push(currentLine);
@@ -52,8 +89,13 @@ function countStudents(fileURL = INPUT) {
             currentLine = [];
           }
           if (byte === 13 && buffer[i + 1] === 10) i += 1;
-        } else if (byte === 44) { // comma
-          currentLine.push(Buffer.from(currentCell).toString().trim());
+        } else if (byte === 44) {
+          // comma
+          currentLine.push(
+            Buffer.from(currentCell)
+              .toString()
+              .trim()
+          );
           currentCell = [];
         } else {
           currentCell.push(byte);
@@ -61,7 +103,11 @@ function countStudents(fileURL = INPUT) {
       }
 
       if (currentCell.length || currentLine.length) {
-        currentLine.push(Buffer.from(currentCell).toString().trim());
+        currentLine.push(
+          Buffer.from(currentCell)
+            .toString()
+            .trim()
+        );
         if (currentLine.some((c) => c)) lines.push(currentLine);
       }
 
@@ -72,7 +118,7 @@ function countStudents(fileURL = INPUT) {
         const record = {};
         header.forEach((col, i) => {
           if (expectedColumnsSet.has(col)) {
-            const charAtLine = ((record[col] = line[i]) || '');
+            const charAtLine = (record[col] = line[i]) || "";
             return charAtLine;
           }
           return null;
@@ -80,14 +126,17 @@ function countStudents(fileURL = INPUT) {
         if (!record.firstname || !record.field) return;
 
         count += 1;
-        if (!fieldGroups[record.field]) fieldGroups[record.field] = [];
+        if (!fieldGroups[record.field])
+          fieldGroups[record.field] = [];
         fieldGroups[record.field].push(record.firstname);
       });
 
       console.log(`Number of students: ${count}`);
       Object.entries(fieldGroups).forEach(([fld, list]) => {
         console.log(
-          `Number of students in ${fld}: ${list.length}. List: ${list.join(', ')}`,
+          `Number of students in ${fld}: ${
+            list.length
+          }. List: ${list.join(", ")}`
         );
       });
 
