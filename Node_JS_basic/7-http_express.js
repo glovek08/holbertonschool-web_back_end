@@ -9,27 +9,25 @@
 // (with and without the database) - the name of the database must be passed as argument of the file
 // CSV file can contain empty lines (at the end) - and they are not a valid student!
 
+const app = require("./6-http_express");
 const countStudents = require('./3-read_file_async');
-const app = require('./6-http_express');
 
-app.get('/students', (req, res) => {
-  if (req.url === '/students') {
-    countStudents('database.csv')
-      .then((output) => {
-        res.write('This is the list of our students\n');
-        res.end(output);
-      })
-      .catch(() => {
-        res.statusCode = 500;
-        res.end('Cannot load the database');
-      });
-  }
+app.get("/students", async (req, res) => {
+  countStudents('database.csv')
+    .then((output) => {
+      res.set("Content-Type", "text/plain");
+      res.send(`This is the list of our students\n${output}`);
+    })
+    .catch((error) => {
+      res.set("Content-Type", "text/plain");
+      res.send(`This is the list of our students\n${error.message}`);
+    });
 });
 
 // This middleware catches request to invalid endpoints.
 // it should be kept at the end.
 app.use((req, res) => {
-  res.status(404).send('Not found. Check URL.');
+  res.status(404).send("Not found. Check URL.");
 });
 
 module.exports = app;
