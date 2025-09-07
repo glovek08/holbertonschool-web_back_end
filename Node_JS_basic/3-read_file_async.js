@@ -111,7 +111,7 @@ function countStudents(fileURL = INPUT) {
         if (currentLine.some((c) => c)) lines.push(currentLine);
       }
 
-      if (lines.length === 0) return resolve();
+      if (lines.length === 0) return resolve("Number of students: 0");
       const header = lines.shift().map((h) => h.toLowerCase());
 
       lines.forEach((line) => {
@@ -130,17 +130,14 @@ function countStudents(fileURL = INPUT) {
           fieldGroups[record.field] = [];
         fieldGroups[record.field].push(record.firstname);
       });
-
-      console.log(`Number of students: ${count}`);
+      let output = `Number of students: ${count}\n`;
       Object.entries(fieldGroups).forEach(([fld, list]) => {
-        console.log(
-          `Number of students in ${fld}: ${
-            list.length
-          }. List: ${list.join(", ")}`
-        );
+        output += `Number of students in ${fld}: ${
+          list.length
+        }. List: ${list.join(", ")}\n`;
       });
 
-      resolve();
+      resolve(output.trim());
       return 1;
     });
   });
