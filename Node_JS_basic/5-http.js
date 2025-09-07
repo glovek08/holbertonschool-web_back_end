@@ -11,7 +11,7 @@
 //  CSV file can contain empty lines (at the end) - and they are not a valid student!
 
 const { createServer } = require('http');
-const os = require('os');
+// const os = require('os');
 const countStudents = require('./3-read_file_async');
 
 const PORT = 1245;
