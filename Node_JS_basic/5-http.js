@@ -10,31 +10,30 @@
 //  the name of the database must be passed as argument of the file
 //  CSV file can contain empty lines (at the end) - and they are not a valid student!
 
-const { createServer } = require('http');
+const { createServer } = require("http");
 // const os = require('os');
-const countStudents = require('./3-read_file_async');
+const countStudents = require("./3-read_file_async");
 
 const PORT = 1245;
-const HOSTNAME = 'localhost';
+const HOSTNAME = "localhost";
 
 const app = createServer((req, res) => {
-  res.setHeader('Content-Type', 'text/plain');
-  if (req.url === '/') {
-    res.end('Hello Holberton School!');
-  } else if (req.url === '/students') {
-    res.write('This is the list of our students\n');
-
-    countStudents('database.csv')
+  res.setHeader("Content-Type", "text/plain");
+  if (req.url === "/") {
+    res.end("Hello Holberton School!");
+  } else if (req.url === "/students") {
+    countStudents("database.csv")
       .then((output) => {
+        res.write("This is the list of our students\n");
         res.end(output);
       })
       .catch(() => {
         res.statusCode = 500;
-        res.end('Cannot load the database');
+        res.end("Cannot load the database");
       });
   } else {
     res.statusCode = 404;
-    res.end('Not Found');
+    res.end("Not Found");
   }
 });
 
