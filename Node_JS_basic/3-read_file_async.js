@@ -18,7 +18,7 @@ const fs = require("fs");
 // CSV file can contain empty lines (at the end) - and they are not a
 // valid student!
 
-const INPUT = "database.csv";
+// const INPUT = "database.csv";
 const expectedColumns = ["firstname", "lastname", "age", "field"];
 
 /**
@@ -53,7 +53,7 @@ const expectedColumns = ["firstname", "lastname", "age", "field"];
  * // Number of students in CS: 6. List: Johann, Arielle, Jonathan, Emmanuel, Guillaume, Katie
  * // Number of students in SWE: 4. List: Guillaume, Joseph, Paul, Tommy
  */
-function countStudents(fileURL = INPUT) {
+function countStudents(fileURL) {
   if (typeof fileURL !== "string") {
     throw new TypeError("File URL invalid data type");
   }
