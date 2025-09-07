@@ -10,26 +10,27 @@
 //  the name of the database must be passed as argument of the file
 //  CSV file can contain empty lines (at the end) - and they are not a valid student!
 
-const { createServer } = require('http');
 // const os = require('os');
+const http = require('http');
 const countStudents = require('./3-read_file_async');
 
 const PORT = 1245;
 const HOSTNAME = 'localhost';
 
-const app = createServer((req, res) => {
+const app = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
+    res.statusCode = 200;
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
-    countStudents('database.csv')
+    res.statusCode = 200;
+    res.write('This is the list of our students\n');
+    countStudents(process.argv[2] || 'database.csv')
       .then((output) => {
-        res.write('This is the list of our students\n');
         res.end(output);
       })
-      .catch(() => {
-        res.statusCode = 500;
-        res.end('Cannot load the database');
+      .catch((error) => {
+        res.end(error.message);
       });
   } else {
     res.statusCode = 404;
@@ -37,14 +38,8 @@ const app = createServer((req, res) => {
   }
 });
 
-app.listen(PORT, HOSTNAME, (error) => {
-  if (error) {
-    console.error(`Something bad happened: ${error}`);
-  }
-  //  else {
-  //   console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
-  //   console.log(`Host machine: ${os.hostname()}`);
-  // }
+app.listen(PORT, HOSTNAME, () => {
+  // console.log(`Server running at http://${HOSTNAME}:${PORT}/`);
 });
 
 module.exports = app;

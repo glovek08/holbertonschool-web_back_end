@@ -11,7 +11,7 @@
 
 You should extend the previously generated servers, e.g:
 
-* In `4-http.js` you generate a HTTP server, then in `5-http.js` you can reuse it by importing the script (`require('/4-http')`). Same with task 6 and 7.
+* In `6-http_express.js` you generate a HTTP server, then in `7-http_express.js` you can reuse it by importing the script (`require('/6-http')`).
 
 ### Express.js
 
