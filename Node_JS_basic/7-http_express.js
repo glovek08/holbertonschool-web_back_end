@@ -14,7 +14,7 @@ const app = require('./6-http_express');
 
 app.get('/students', (req, res) => {
   if (req.url === '/students') {
-    countStudents('databases.csv')
+    countStudents('database.csv')
       .then((output) => {
         res.write('This is the list of our students\n');
         res.end(output);
