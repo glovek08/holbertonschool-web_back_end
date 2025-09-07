@@ -4,20 +4,23 @@
 //     HTTP server should listen on port 1245
 //     Displays Hello Holberton School! in the page body for the endpoint /
 
-const express = require('express');
-// const os = require('os');
+const express = require("express");
+const os = require("os");
 
 const app = express();
 const PORT = 1245;
-const HOST = 'localhost';
+const HOST = "localhost";
 
-app.get('/', (req, res) => {
-  res.send('Hello Holberton School!');
+app.get("/", (req, res) => {
+  if (req.url === '/') {
+    res.send("Hello Holberton School!");
+  }
 });
 
 app.listen(PORT, HOST, () => {
-  // console.log(`Server on: http://${HOST}:${PORT}`);
-  // console.log(`Host: ${os.hostname}`);
+  console.log(`Server running at http://${HOST}:${PORT}`);
+  console.log(`Host: ${os.hostname()}`);
 });
 
 module.exports = app;
+
