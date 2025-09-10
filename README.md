@@ -1,3 +1,9 @@
+<p align="right">
+  <a href="https://holbertonschool.uy/" target="_blank" style="border:0;">
+    <img src="https://github.com/glovek08/glovek08/blob/main/holberton_logo.png?raw=true" height="50" alt="Holberton Logo"/>
+  </a>
+</p>
+
 # holbertonschool-web_back_end
 
 A collection of backend projects completed as part of the Holberton School curriculum. This repository contains various exercises and mini-projects covering backend development concepts, primarily using **Python** and **JavaScript**.
